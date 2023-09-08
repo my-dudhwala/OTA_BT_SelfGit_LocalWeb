@@ -16,8 +16,6 @@
 const char * ssid = "R&D Web";
 const char * password = "123456789";
 
-//Check
-
 AsyncWebServer server(80);
 
 #define LED_BUILTIN 2
@@ -44,7 +42,7 @@ int FirmwareVersionCheck();
 
 unsigned long previousMillis = 0; // will store last time LED was updated
 unsigned long previousMillis_2 = 0;
-const long interval = 1500;
+const long interval = 1000;
 const long mini_interval = 1000;
 
 #ifndef CERT_H
@@ -97,21 +95,21 @@ void repeatedCall() {
 //    }
 //    digitalWrite(LED_BUILTIN, ledState);
 //  }
-  if ((currentMillis - previousMillis_2) >= mini_interval) {
-    previousMillis_2 = currentMillis;
-    Serial.print("new idle loop...");
-    Serial.print(num++);
-    Serial.print(" Active fast firmware version:");
-    Serial.println(FirmwareVer);
-    if (WiFi.status() == WL_CONNECTED)
-    {
-      Serial.println("wifi connected");
-    }
-    else
-    {
-      connect_wifi();
-    }
-  }
+//  if ((currentMillis - previousMillis_2) >= mini_interval) {
+//    previousMillis_2 = currentMillis;
+//    Serial.print("new idle loop...");
+//    Serial.print(num++);
+//    Serial.print(" Active fast firmware version:");
+//    Serial.println(FirmwareVer);
+//    if (WiFi.status() == WL_CONNECTED)
+//    {
+//      Serial.println("wifi connected");
+//    }
+//    else
+//    {
+//      connect_wifi();
+//    }
+//  }
 }
 
 struct Button {
@@ -269,13 +267,13 @@ int FirmwareVersionCheck(void) {
   {
     payload.trim();
     if (payload.equals(FirmwareVer)) {
-      Serial.printf("\nDevice already on latest firmware version:%s\n", FirmwareVer);
+      //Serial.printf("\nDevice already on latest firmware version:%s\n", FirmwareVer);
       return 0;
     }
     else
     {
+      Serial.print("New firmware detected");
       Serial.println(payload);
-      Serial.println("New firmware detected");
       return 1;
     }
   }
