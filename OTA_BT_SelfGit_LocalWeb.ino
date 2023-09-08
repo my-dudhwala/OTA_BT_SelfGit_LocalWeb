@@ -24,12 +24,13 @@ unsigned long LedpreviousMillis = 0; //This is from basicOTA, and already define
 const long Ledinterval = 500;//This is from basicOTA, and already define here...
 
 String FirmwareVer = {
-  "3.4"
+  "3.5"
 };
 
 //Test change
 
 #define URL_fw_Version "https://raw.githubusercontent.com/my-dudhwala/OTA_BT_SelfGit_LocalWeb/main/Version.h"
+//---------------------https://github.com/my-dudhwala/OTA_BT_SelfGit_LocalWeb/main/Version.h
 #define URL_fw_Bin "https://raw.githubusercontent.com/my-dudhwala/OTA_BT_SelfGit_LocalWeb/main/OTA_BT_SelfGit_LocalWeb.ino.esp32.bin"
 //https://raw.githubusercontent.com/programmer131/ESP8266_ESP32_SelfUpdate/master/esp32_ota/bin_version.txt
 
@@ -101,11 +102,11 @@ void repeatedCall() {
 //    Serial.print(num++);
 //    Serial.print(" Active fast firmware version:");
 //    Serial.println(FirmwareVer);
-    if (WiFi.status() == WL_CONNECTED)
-    {
-      Serial.println("wifi connected");
-    }
-    else
+    if (WiFi.status() == !WL_CONNECTED)
+//    {
+//      Serial.println("wifi connected");
+//    }
+//    else
     {
       Serial.println("wifi is not connected,");
       connect_wifi();
@@ -235,7 +236,7 @@ int FirmwareVersionCheck(void) {
   fwurl += URL_fw_Version;
   fwurl += "?";
   fwurl += String(rand());
-  Serial.println(fwurl);
+  //Serial.println(fwurl);
   WiFiClientSecure * client = new WiFiClientSecure;
 
   if (client)
