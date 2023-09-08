@@ -24,13 +24,12 @@ unsigned long LedpreviousMillis = 0; //This is from basicOTA, and already define
 const long Ledinterval = 500;//This is from basicOTA, and already define here...
 
 String FirmwareVer = {
-  "3.7"
+  "3.8"
 };
 
 //Test change
 
 #define URL_fw_Version "https://raw.githubusercontent.com/my-dudhwala/OTA_BT_SelfGit_LocalWeb/main/Version.h"
-//---------------------https://github.com/my-dudhwala/OTA_BT_SelfGit_LocalWeb/main/Version.h
 #define URL_fw_Bin "https://raw.githubusercontent.com/my-dudhwala/OTA_BT_SelfGit_LocalWeb/main/OTA_BT_SelfGit_LocalWeb.ino.esp32.bin"
 //https://raw.githubusercontent.com/programmer131/ESP8266_ESP32_SelfUpdate/master/esp32_ota/bin_version.txt
 
@@ -141,7 +140,7 @@ void setup() {
   pinMode(button_boot.PIN, INPUT);
   attachInterrupt(button_boot.PIN, isr, RISING);
   Serial.begin(115200);
-  Serial.print("Active firmware version:");
+  Serial.print("Firmware version:");
   Serial.println(FirmwareVer);
   pinMode(LED_BUILTIN, OUTPUT);
   connect_wifi();
@@ -207,8 +206,11 @@ void connect_wifi() {
   Serial.println("IP address: ");
   Serial.println(WiFi.localIP());
 }
-
-
+unsigned long ElapsedTime = 0;
+unsigned long EventStart = 0;
+unsigned long EventEnd = 0;
+unsigned long Seconds = 0;
+static bool Cal = true;
 void firmwareUpdate(void) {
   WiFiClientSecure client;
   client.setCACert(rootCACertificate);
@@ -228,6 +230,15 @@ void firmwareUpdate(void) {
       Serial.println("HTTP_UPDATE_OK");
       break;
   }
+  EventEnd = millis();
+  Serial.print("Event Ended on: ");
+  Serial.println(EventEnd);
+  Serial.print("Elapsed millis: ");
+  ElapsedTime = EventEnd - EventStart;
+  Serial.println(ElapsedTime);
+  Seconds = ElapsedTime / 1000;
+  Serial.print("Elapsed seconds: ");
+  Serial.println(Seconds);
 }
 int FirmwareVersionCheck(void) {
   String payload;
@@ -264,10 +275,11 @@ int FirmwareVersionCheck(void) {
           //    else
         {
           Serial.println("wifi is not connected,");
-          connect_wifi();
+          //connect_wifi();
         }
         Serial.print("error in downloading version file:");
         Serial.println(httpCode);
+        connect_wifi();
       }
       https.end();
     }
@@ -283,6 +295,11 @@ int FirmwareVersionCheck(void) {
     }
     else
     {
+      EventStart = millis();
+      Serial.print("Event Started on: ");
+      Serial.print(EventStart);
+      Serial.println(" millis");
+
       Serial.print("New firmware detected");
       Serial.println(payload);
       return 1;
