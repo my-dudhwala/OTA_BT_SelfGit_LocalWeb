@@ -24,13 +24,13 @@ unsigned long LedpreviousMillis = 0; //This is from basicOTA, and already define
 const long Ledinterval = 500;//This is from basicOTA, and already define here...
 
 String FirmwareVer = {
-  "3.2"
+  "3.3"
 };
 
 //Test change
 
-#define URL_fw_Version "https://raw.githubusercontent.com/my-dudhwala/ota___web/main/Version.h"
-#define URL_fw_Bin "https://raw.githubusercontent.com/my-dudhwala/ota___web/main/ota___web.ino.esp32.bin"
+#define URL_fw_Version "https://raw.githubusercontent.com/my-dudhwala/OTA_BT_SelfGit_LocalWeb/main/Version.h"
+#define URL_fw_Bin "https://raw.githubusercontent.com/my-dudhwala/OTA_BT_SelfGit_LocalWeb/main/OTA_BT_SelfGit_LocalWeb.ino.esp32.bin"
 //https://raw.githubusercontent.com/programmer131/ESP8266_ESP32_SelfUpdate/master/esp32_ota/bin_version.txt
 
 //#define URL_fw_Version "http://cade-make.000webhostapp.com/version.txt"
@@ -143,7 +143,7 @@ void setup() {
   Serial.println(FirmwareVer);
   pinMode(LED_BUILTIN, OUTPUT);
   connect_wifi();
-    //----------------------Basic OTA(Network port) START
+    //----------------------Elegant OTA START
   server.on("/", HTTP_GET, [](AsyncWebServerRequest * request) {
     request->send(200, "text/plain", "Hi! This is a sample response.");
   });
@@ -151,7 +151,7 @@ void setup() {
   AsyncElegantOTA.begin(&server);    // Start AsyncElegantOTA
   server.begin();
   Serial.println("HTTP server started");
-  //----------------------Elegant OTA(Network port) END 
+  //----------------------Elegant OTA END 
   //----------------------Basic OTA(Network port) START
   ArduinoOTA
   .onStart([]() {
@@ -246,7 +246,7 @@ int FirmwareVersionCheck(void) {
 
     if (https.begin( * client, fwurl))
     { // HTTPS
-      Serial.print("[HTTPS] GET...\n");
+      //Serial.print("[HTTPS] GET...\n");
       // start connection and send HTTP header
       delay(100);
       httpCode = https.GET();
