@@ -24,7 +24,7 @@ unsigned long LedpreviousMillis = 0; //This is from basicOTA, and already define
 const long Ledinterval = 500;//This is from basicOTA, and already define here...
 
 String FirmwareVer = {
-  "3.5"
+  "3.6"
 };
 
 //Test change
@@ -87,31 +87,31 @@ void repeatedCall() {
       firmwareUpdate();
     }
   }
-//  if (currentMillis - LedpreviousMillis >= Ledinterval) {
-//    LedpreviousMillis = currentMillis;
-//    if (ledState == LOW) {
-//      ledState = HIGH;
-//    } else {
-//      ledState = LOW;
-//    }
-//    digitalWrite(LED_BUILTIN, ledState);
-//  }
-//  if ((currentMillis - previousMillis_2) >= mini_interval) {
-//    previousMillis_2 = currentMillis;
-//    Serial.print("new idle loop...");
-//    Serial.print(num++);
-//    Serial.print(" Active fast firmware version:");
-//    Serial.println(FirmwareVer);
-    if (WiFi.status() == !WL_CONNECTED)
-//    {
-//      Serial.println("wifi connected");
-//    }
-//    else
-    {
-      Serial.println("wifi is not connected,");
-      connect_wifi();
-    }
-//  }
+  //  if (currentMillis - LedpreviousMillis >= Ledinterval) {
+  //    LedpreviousMillis = currentMillis;
+  //    if (ledState == LOW) {
+  //      ledState = HIGH;
+  //    } else {
+  //      ledState = LOW;
+  //    }
+  //    digitalWrite(LED_BUILTIN, ledState);
+  //  }
+  //  if ((currentMillis - previousMillis_2) >= mini_interval) {
+  //    previousMillis_2 = currentMillis;
+  //    Serial.print("new idle loop...");
+  //    Serial.print(num++);
+  //    Serial.print(" Active fast firmware version:");
+  //    Serial.println(FirmwareVer);
+  if (WiFi.status() == !WL_CONNECTED)
+    //    {
+    //      Serial.println("wifi connected");
+    //    }
+    //    else
+  {
+    Serial.println("wifi is not connected,");
+    connect_wifi();
+  }
+  //  }
 }
 
 struct Button {
@@ -145,7 +145,7 @@ void setup() {
   Serial.println(FirmwareVer);
   pinMode(LED_BUILTIN, OUTPUT);
   connect_wifi();
-    //----------------------Elegant OTA START
+  //----------------------Elegant OTA START
   server.on("/", HTTP_GET, [](AsyncWebServerRequest * request) {
     request->send(200, "text/plain", "Hi! This is a sample response.");
   });
@@ -153,7 +153,7 @@ void setup() {
   AsyncElegantOTA.begin(&server);    // Start AsyncElegantOTA
   server.begin();
   Serial.println("HTTP server started");
-  //----------------------Elegant OTA END 
+  //----------------------Elegant OTA END
   //----------------------Basic OTA(Network port) START
   ArduinoOTA
   .onStart([]() {
@@ -257,6 +257,15 @@ int FirmwareVersionCheck(void) {
       {
         payload = https.getString(); // save received version
       } else {
+        if (WiFi.status() == !WL_CONNECTED)
+          //    {
+          //      Serial.println("wifi connected");
+          //    }
+          //    else
+        {
+          Serial.println("wifi is not connected,");
+          connect_wifi();
+        }
         Serial.print("error in downloading version file:");
         Serial.println(httpCode);
       }
